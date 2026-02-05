@@ -1,5 +1,6 @@
 import React from "react";
 import { useState,useEffect } from "react";
+import RegisterComponent from './registercomponent/RegisterComponent'
 const App=()=>
 { 
   const getRequest = () =>
@@ -37,7 +38,8 @@ const App=()=>
   return(
     <div>
      {
-      backEndData.msg
+      // backEndData.msg
+      <RegisterComponent/>
 
      }
     </div>
