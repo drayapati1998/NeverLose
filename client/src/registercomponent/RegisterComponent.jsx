@@ -1,19 +1,27 @@
-import React from "react";
-import {useState} from "react";
+import React, { useState } from "react";
 
 function RegisterComponent(){
-    const[fullname,setFullname]=useState[''];
-    const[email,setEmail]=useState[''];
-    const[password,setPassword]=useState[''];
-    const[confirmpassword,setConfirmpassword]=useState[''];
+    const[fullname,setFullname]=useState('');
+    const[email,setEmail]=useState('');
+    const[password,setPassword]=useState('');
+    const[confirmpassword,setConfirmpassword]=useState('');
+    const strongPassword =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
     const handleSubmit=(e)=>{
         e.preventDefault();
         if(!fullname||!email||!password||!confirmpassword){
             alert("All fields are required");
             return;
         }
+
+
+        if(!strongPassword.test(password)){
+            alert("password must be minimum 8 characters and include uppercase,lowercase,number and special character");
+            return;
+        }
         if(password!==confirmpassword){
             alert("passwords dont match");
+            return;
         }
             console.log('Form submitted',{fullname,email,password,confirmpassword});{
         }
