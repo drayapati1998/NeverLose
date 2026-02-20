@@ -1,6 +1,9 @@
 import React from "react";
 import { useState,useEffect } from "react";
-import RegisterComponent from "./registercomponent/RegisterComponent.jsx";
+import { Routes,Route } from "react-router-dom";
+import RegisterComponent from "./Components/registercomponent/RegisterComponent.jsx";
+import LoginComponent from "./Components/logincomponent/LoginComponent.jsx";
+
 // const App=()=>
 // { 
 //   const getRequest = () =>
@@ -36,12 +39,10 @@ import RegisterComponent from "./registercomponent/RegisterComponent.jsx";
 //   },[])
 function App(){
   return(
-    <div>
-     
-      {/*  */}
-      <RegisterComponent/>
-
-    </div>
+    <Routes>
+      <Route path="/register" element={<RegisterComponent/>}/>
+      <Route path="/login" element={<LoginComponent/>}/>
+    </Routes>
   );
 }
 export default App;
