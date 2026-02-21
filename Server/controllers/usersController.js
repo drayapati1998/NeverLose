@@ -3,6 +3,7 @@
 
 const { auth, db } = require("../config/firebaseConfig");
 const fetch = require("node-fetch");
+const db = require("../DB/db");
 
 /**
  * POST /api/users/signup
@@ -10,37 +11,39 @@ const fetch = require("node-fetch");
  */
 async function signup(req, res) {
   try {
-    const { email, password, name } = req.body;
+    const { userid, email, password, name } = req.body;
 
-    if (!email || !password) {
+    if (!email || !password||  !name) {
       return res.status(400).json({ error: "EMAIL_AND_PASSWORD_REQUIRED" });
+    }   
+
+  const createdAt = new Date().toISOString();
+
+  db.run(
+    `INSERT INTO users (firebase_uid, email, name, created_at)
+     VALUES (?, ?, ?, ?)`,
+    [uid, email, name || null, createdAt],
+    function (err) {
+      if (err) {
+        if (err.message.includes("UNIQUE")) {
+          return res.status(409).json({ error: "USER_ALREADY_EXISTS" });
+        }
+        console.error("Register user error:", err);
+        return res.status(500).json({ error: "INTERNAL_ERROR" });
+      }
+
+      res.status(201).json({
+        id: this.lastID,
+        uid,
+        email,
+        name: name || null
+      });
     }
-
-    // Create Firebase Auth user
-    const userRecord = await auth.createUser({
-      email,
-      password,
-      displayName: name || null
-    });
-
-    // Create Firestore profile
-    await db.collection("users").doc(userRecord.uid).set({
-      uid: userRecord.uid,
-      email,
-      name: name || null,
-      createdAt: new Date().toISOString()
-    });
-
-    res.status(201).json({
-      uid: userRecord.uid,
-      email,
-      name: name || null
-    });
-  } catch (err) {
-    console.error("Signup error:", err);
-    res.status(500).json({ error: err.message });
-  }
+  );
 }
+
+}
+
 
 /**
  * POST /api/users/login
@@ -85,27 +88,25 @@ async function login(req, res) {
  * GET /api/users/me
  * Returns the authenticated user's Firestore profile.
  */
-async function getCurrentUser(req, res) {
-  try {
-    const uid = req.user.uid;
+// GET /api/users/me
+function getCurrentUser(req, res) {
+  db.get(
+    `SELECT * FROM users WHERE firebase_uid = ?`,
+    [req.user.uid],
+    (err, user) => {
+      if (err) return res.status(500).json({ error: "INTERNAL_ERROR" });
+      if (!user) return res.status(404).json({ error: "USER_NOT_FOUND" });
 
-    const userDoc = await db.collection("users").doc(uid).get();
-    if (!userDoc.exists) {
-      return res.status(404).json({ error: "USER_NOT_FOUND" });
+      res.json(user);
     }
-
-    res.json(userDoc.data());
-  } catch (err) {
-    console.error("Get user error:", err);
-    res.status(500).json({ error: "INTERNAL_ERROR" });
-  }
+  );
 }
 
 /**
  * PUT /api/users/me
  * Updates the authenticated user's profile.
  */
-async function updateUser(req, res) {
+/*async function updateUser(req, res) {
   try {
     const uid = req.user.uid;
     const { name } = req.body;
@@ -120,11 +121,10 @@ async function updateUser(req, res) {
     console.error("Update user error:", err);
     res.status(500).json({ error: "INTERNAL_ERROR" });
   }
-}
+}*/
 
 module.exports = {
   signup,
   login,
-  getCurrentUser,
-  updateUser
+  getCurrentUser
 };
