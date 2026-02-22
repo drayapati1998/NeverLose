@@ -1,16 +1,11 @@
-// Public routes: no auth required.
+// routes/publicRoutes.js
+// Public routes (no auth required).
 
 const express = require("express");
 const router = express.Router();
+const publicController = require("../controllers/publicController");
 
-const { validateBody } = require("../middleware/validate");
-const { foundReportSchema } = require("../utils/validators");
-const { getPublicItem, submitFoundReport } = require("../controllers/publicController");
-
-// Public scan page data
-router.get("/items/:token", getPublicItem);
-
-// Public found report submission
-router.post("/items/:token/found", validateBody(foundReportSchema), submitFoundReport);
+// GET /public/scan/:token
+router.get("/scan/:token", publicController.getItemByToken);
 
 module.exports = router;

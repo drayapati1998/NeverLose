@@ -1,20 +1,13 @@
-// Owner routes: require Firebase auth.
+// routes/itemRoutes.js
+// Routes for owner item management.
 
 const express = require("express");
 const router = express.Router();
+const requireFirebaseAuth = require("../middleware/firebaseAuth");
+const itemController = require("../controllers/itemsController");
 
-const { requireFirebaseAuth } = require("../middleware/firebaseAuth");
-const { validateBody } = require("../middleware/validate");
-const { createItemSchema } = require("../utils/validators");
-const { createItem, listItems, getLabel } = require("../controllers/itemsController");
-
-// Create item (wizard submit)
-router.post("/", requireFirebaseAuth, validateBody(createItemSchema), createItem);
-
-// List owner's items
-router.get("/", requireFirebaseAuth, listItems);
-
-// Get label PDF for an item
-router.get("/:itemId/label", requireFirebaseAuth, getLabel);
+// Protected routes
+router.post("/", requireFirebaseAuth, itemController.createItem);
+router.get("/", requireFirebaseAuth, itemController.getMyItems);
 
 module.exports = router;

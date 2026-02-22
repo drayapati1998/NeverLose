@@ -1,23 +1,17 @@
-// Routes for user authentication and profile management.
+// routes/userRoutes.js
+// User authentication & profile routes.
 
 const express = require("express");
 const router = express.Router();
 
-const {
-  signup,
-  login,
-  getCurrentUser,
-  updateUser
-} = require("../controllers/usersController");
-
-const { requireFirebaseAuth } = require("../middleware/firebaseAuth");
+const userController = require("../controllers/usersController");
+const  requireFirebaseAuth = require("../middleware/firebaseAuth");
 
 // Public routes
-router.post("/signup", signup);
-router.post("/login", login);
+router.post("/signup", userController.signup);
+router.post("/login", userController.login);
 
-// Protected routes
-router.get("/me", requireFirebaseAuth, getCurrentUser);
-router.put("/me", requireFirebaseAuth, updateUser);
+// Protected route
+router.get("/me", requireFirebaseAuth, userController.getCurrentUser);
 
 module.exports = router;

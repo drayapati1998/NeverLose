@@ -9,6 +9,8 @@ const helmet = require("helmet");
 const itemsRouter = require("./routes/items");
 const publicRouter = require("./routes/public");
 const usersRouter = require("./routes/users");
+const reportRouter = require("./routes/reports");
+
 
 const app = express();
 
@@ -29,6 +31,9 @@ app.use("/api/items", itemsRouter);
 
 // Public (no auth) APIs
 app.use("/api/public", publicRouter);
+
+// Report APIs
+app.use("/api/reports", reportRouter);
 
 // Simple health check
 app.get("/health", (req, res) => {

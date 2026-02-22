@@ -31,4 +31,4 @@ async function requireFirebaseAuth(req, res, next) {
   }
 }
 
-module.exports = { requireFirebaseAuth };
+module.exports =  requireFirebaseAuth ;
