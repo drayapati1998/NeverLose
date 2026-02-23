@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-
+import ItemForm from "../item/ItemForm";
 import ItemList from "../itemlist/ItemList";
 import { useNavigate } from "react-router-dom";
 
@@ -19,8 +19,8 @@ function Dashboard() {
       <p>Logged in as: {user.email}</p>
       <button onClick={logout}>Logout</button>
 
-      {/*<h3>Create Item</h3>
-      <ItemForm />*/}
+      <h3>Create Item</h3>
+      <ItemForm />
 
       <h3>My Items</h3>
       <ItemList />

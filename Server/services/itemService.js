@@ -2,14 +2,14 @@
 // Encapsulates all DB operations related to items.
 
 const db = require("../DB/database");
-const { generateQrToken } = require("./tokenService");
+const { generateSecureToken } = require("./tokenService");
 
 /**
  * Creates a new item for the given owner with a unique QR token.
  */
 function createItem(ownerUid, nickname, description) {
   return new Promise((resolve, reject) => {
-    const qrToken = generateQrToken();
+    const qrToken = generateSecureToken();
 
     const stmt = db.prepare(
       "INSERT INTO items (owner_uid, nickname, description, qr_token) VALUES (?, ?, ?, ?)"
@@ -67,7 +67,7 @@ function getItemByToken(qrToken) {
   });
 }
 
-module.exports = {
+module.exports = {  
   createItem,
   getItemsByOwner,
   getItemByToken,
