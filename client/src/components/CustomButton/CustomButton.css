@@ -1,0 +1,28 @@
+.btn-blue {
+  background-color: var(--nl-tech-blue) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 10px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.btn-blue:hover {
+  background-color: var(--nl-deep-blue) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+}
+
+.btn-red {
+  background-color: var(--nl-danger) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.btn-red:hover {
+  background-color: #c0392b !important;
+  transform: scale(1.02);
+}

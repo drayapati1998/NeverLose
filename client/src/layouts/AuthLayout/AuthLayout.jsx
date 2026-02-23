@@ -20,7 +20,7 @@ const AuthLayout = ({ children, title, subtitle }) => {
                 src={logo}
                 alt="Neverlose Logo"
                 className="mb-3"
-                style={{ width: "200px" }}
+                style={{ width: "250px" }}
               />
               <p className="text-muted text-center">
                 Bridging the Gap Between Lost and Found
