@@ -1,7 +1,7 @@
 // services/userService.js
 // Handles user creation, login verification, and profile retrieval.
 
-const admin = require("../config/firebaseConfig");
+const {admin} = require("../config/firebaseConfig");
 const fetch = require("node-fetch");
 const db = require("../DB/database");
 

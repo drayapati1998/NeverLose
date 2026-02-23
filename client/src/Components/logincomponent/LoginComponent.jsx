@@ -1,19 +1,34 @@
 import React, { useState } from "react";
+import userApi from "../../api/userApi";
+import { login } from "../../services/authService";
 import {Link} from "react-router-dom";//importing link to use in login button
 import "./LoginComponent.css";
 
 
-function LoginComponent() {
+function LoginComponent({ onSuccess }) {
 const [email, setEmail] = useState(" ");
+ const [status, setStatus] = useState("");
+
 const [password, setPassword] = useState(" ");
-  const handleLogin = (e) => {
+  const handleLogin = async(e) => {
     e.preventDefault();
 
     if (!email || !password) {
       alert("All fields are required");
       return;
     }
-    console.log("Login Data:", { email, password });
+     try {
+      await login({
+        email: email,
+        password: password
+      });
+
+      onSuccess && onSuccess();
+    } catch (err) {
+      setStatus(err.response?.data?.error || err.message || "Login failed");
+    }
+
+
   };
 
   return (

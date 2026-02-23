@@ -1,48 +1,40 @@
-import React from "react";
-import { useState,useEffect } from "react";
-import RegisterComponent from './registercomponent/RegisterComponent'
-const App=()=>
-{ 
-  const getRequest = () =>
-  {
-    fetch("/api")
-    .then(response => {
-    if (!response.ok) {
-      // If response is not OK (e.g., 404 or 500), read as text to see the error message
-      return response.text().then(text => {
-        throw new Error(`Server Error: ${response.status} - ${text}`);
-      });
-    }
-    // Check if the response is actually JSON
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      return response.json();
-    } else {
-      throw new TypeError('Expected JSON, but received non-JSON response');
-    }
-  })
-  .then(data => {
-    // Handle your JSON data here
-    setBackEndData(data)
-    console.log(data);
-  })
-  .catch(error => {
-    console.error('There was a problem with the fetch operation:', error.message);
-    // Log the error for debugging
-  })
-  }
-   const [backEndData,setBackEndData]=useState([{}]);
-  useEffect(()=>{
-    getRequest();
-  },[])
-  return(
-    <div>
-     {
-      // backEndData.msg
-      <RegisterComponent/>
+import React, { useContext } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
 
-     }
-    </div>
-  )
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import DashboardPage from "./pages/DashboardPage";
+
+function PrivateRoute({ children }) {
+  const { user, loading } = useContext(AuthContext);
+  if (loading) return <p>Loading...</p>;
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
 }
+
+function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <DashboardPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}
+
 export default App;

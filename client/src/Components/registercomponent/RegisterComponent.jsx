@@ -1,15 +1,20 @@
 import React, { useState } from "react";
+import { signup } from "../../services/authService";
+
 import {Link} from "react-router-dom";//importing link to use in register button
 import './RegisterComponent.css';
 
-function RegisterComponent(){
+function RegisterComponent({ onSuccess }){
+    //const [form, setForm] = useState({ fullname: "", email: "", password: "" });
+  const [status, setStatus] = useState("");
+
     const[fullname,setFullname]=useState('');
     const[email,setEmail]=useState('');
     const[password,setPassword]=useState('');
     const[confirmpassword,setConfirmpassword]=useState('');
     const strongPassword =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    const handleSubmit=(e)=>{
+    const handleSubmit=async (e)=>{
         e.preventDefault();
         console.log("Button clicked")
         if(!fullname||!email||!password||!confirmpassword){
@@ -24,8 +29,23 @@ function RegisterComponent(){
             alert("passwords dont match");
             return;
         }
-            console.log('Form submitted',{fullname,email,password,confirmpassword});{
-        }
+            try {
+                
+
+            console.log(`email = ${email} fullname = ${fullname} password= ${password}`)
+      await signup({
+      name: fullname,
+      email: email,
+      password: password,
+    });
+
+
+      setStatus("Signup successful. You can now log in.");
+      onSuccess && onSuccess();
+    } catch (err) {
+      setStatus(err.message);
+    }
+
 
     };
     return (
@@ -48,8 +68,10 @@ function RegisterComponent(){
         <input type='password' id='password' placeholder='Minimum of 8 characters' value={password} onChange={(e)=>setPassword(e.target.value)}/>
         <label htmlFor='confirm password'>Confirm Password</label>
         <input type='password' id='confirmpassword' placeholder='Repeat the same password' value={confirmpassword} onChange={(e)=>setConfirmpassword(e.target.value)}/>
-        <button type='submit'>Create Account</button>
-        <h6>Already have an account?<Link to='/login'>Login here</Link></h6>
+       <button type="submit">Sign Up</button>
+      {status && <p>{status}</p>}
+
+        {/*<h6>Already have an account?<Link to='/login'>Login here</Link></h6>*/}
            
     </form>
     </div>
