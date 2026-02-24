@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./global.css";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 
 import LoginPage from "./pages/LoginPage";
