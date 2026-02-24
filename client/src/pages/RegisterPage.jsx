@@ -1,5 +1,5 @@
 import AuthLayout from "../layouts/AuthLayout/AuthLayout";
-import CustomButton from "../components/CustomButton/CustomButton";
+import CustomButton from "../components/CustomButton/CustomButton"; 
 
 function RegisterPage() {
   return (

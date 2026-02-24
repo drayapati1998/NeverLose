@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { signup } from "../../services/authService";
-
+//import CustomButton from "../CustomButton/CustomButton";
 import {Link} from "react-router-dom";//importing link to use in register button
 import './RegisterComponent.css';
 

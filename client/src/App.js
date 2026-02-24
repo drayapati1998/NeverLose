@@ -5,8 +5,15 @@ import "./global.css";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 
 import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
+//import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import CreateItemPage from "./pages/CreateItemPage";
+import QRCodePage from "./pages/QRCodePage";
+import PublicScan from "./pages/PublicScan";
+import SignupPage from "./pages/SignupPage";
+//import DashboardPage from "./pages/DashboardPage";
+//import FoundReport from "./pages/FoundReport";
+
 
 function PrivateRoute({ children }) {
   const { user, loading } = useContext(AuthContext);
@@ -23,20 +30,17 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
 
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <DashboardPage />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/create" element={<CreateItemPage />} />
+          <Route path="/label/:itemId" element={<QRCodePage />} />
 
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/f/:token" element={<PublicScan />} />
+         
         </Routes>
       </BrowserRouter>
     </AuthProvider>
   );
 }
+
 
 export default App;

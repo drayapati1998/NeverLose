@@ -10,7 +10,7 @@ const itemsRouter = require("./routes/items");
 const publicRouter = require("./routes/public");
 const usersRouter = require("./routes/users");
 const reportRouter = require("./routes/reports");
-
+const labelRouter = require("./routes/labels");
 
 const app = express();
 
@@ -34,6 +34,9 @@ app.use("/api/public", publicRouter);
 
 // Report APIs
 app.use("/api/reports", reportRouter);
+
+// label APIs
+app.use("/api/labels", labelRouter);
 
 // Simple health check
 app.get("/health", (req, res) => {
