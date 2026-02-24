@@ -29,12 +29,12 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/f/:token" element={<PublicScan />} />
 
           <Route path="/" element={<DashboardPage />} />
           <Route path="/create" element={<CreateItemPage />} />
           <Route path="/label/:itemId" element={<QRCodePage />} />
-
-          <Route path="/f/:token" element={<PublicScan />} />
+          
          
         </Routes>
       </BrowserRouter>

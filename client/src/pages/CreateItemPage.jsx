@@ -1,7 +1,7 @@
 import { useState } from "react";
-import ItemForm from "../Components/item/ItemForm";
-import VerificationStep from "../Components/item/VerificationStep";
-import ReviewStep from "../Components/item/ReviewStep";
+import ItemForm from "../components/item/ItemForm";
+import VerificationStep from "../components/item/VerificationStep";
+import ReviewStep from "../components/item/ReviewStep";
 import itemApi from "../api/itemApi";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +11,7 @@ export default function CreateItemPage() {
     nickname: "",
     description: "",
     photoUrl: "",
-    verification: { enabled: false, question: "" }
+    verification: { enabled: false, question: "" },
   });
 
   const navigate = useNavigate();
@@ -28,7 +28,12 @@ export default function CreateItemPage() {
       )}
 
       {step === 2 && (
-        <VerificationStep form={form} setForm={setForm} next={() => setStep(3)} back={() => setStep(1)} />
+        <VerificationStep
+          form={form}
+          setForm={setForm}
+          next={() => setStep(3)}
+          back={() => setStep(1)}
+        />
       )}
 
       {step === 3 && (

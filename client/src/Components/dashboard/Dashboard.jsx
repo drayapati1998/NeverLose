@@ -1,13 +1,13 @@
-import React, { useContext,useEffect, useState } from "react";
-
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import ItemForm from "../item/ItemForm";
 import ItemList from "../itemlist/ItemList";
 import { useNavigate } from "react-router-dom";
+import CustomButton from "../CustomButton/CustomButton";
 import itemApi from "../../api/itemApi";
+import { Row, Col, Container } from "react-bootstrap";
+
 function Dashboard() {
   const [items, setItems] = useState([]);
-  //const navigate = useNavigate();
 
   useEffect(() => {
     itemApi.list().then((res) => setItems(res.data));
@@ -22,37 +22,43 @@ function Dashboard() {
   }
 
   return (
-    <div>
-      <h2>Dashboard</h2>
-      <p>Logged in as: {user.email}</p>
-      <button onClick={logout}>Logout</button>
+    <Container fluid className="px-0">
+      {/* header pn dashboard */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 className="fw-bold mb-0">Your Items</h2>
+          <p className="text-white-50 small">
+            Manage and protect your valuables
+          </p>
+        </div>
 
-        <div className="p-6 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Your Items</h1>
-
-        <button
+        <CustomButton
           onClick={() => navigate("/create")}
-          className="px-4 py-2 bg-green-600 text-white rounded"
+          variant="primary"
+          className="btn-red"
         >
           + Create New Item
-        </button>
+        </CustomButton>
       </div>
 
-      { !items || items.length === 0 ? (
-        <p className="text-gray-600">You haven't created any items yet.</p>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          {items.map((item) => (
-            <ItemList key={item.id} item={item} />
-          ))}
+      {/* Grid de Items */}
+      {!items || items.length === 0 ? (
+        <div className="text-center py-5 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-25">
+          <p className="mb-0 text-white">You haven't created any items yet.</p>
+          <small className="text-white-50">
+            Click the button above to start protecting your things.
+          </small>
         </div>
+      ) : (
+        <Row className="g-4">
+          {items.map((item) => (
+            <Col key={item.id} xs={12} md={6} lg={4}>
+              <ItemList item={item} />
+            </Col>
+          ))}
+        </Row>
       )}
-    </div>
-
-
-     
-    </div>
+    </Container>
   );
 }
 

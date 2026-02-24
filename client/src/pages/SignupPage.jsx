@@ -1,15 +1,20 @@
 import React from "react";
-import RegisterComponent from "../Components/registercomponent/RegisterComponent";
+import RegisterComponent from "../components/registercomponent/RegisterComponent";
 import { Link, useNavigate } from "react-router-dom";
+import AuthLayout from "../layouts/AuthLayout/AuthLayout";
 
 function SignupPage() {
   const navigate = useNavigate();
   return (
-    <div>
-      <h2>Sign Up</h2>
+    <AuthLayout
+      title="Join the community"
+      subtitle="Secure your essentials and gain peace of mind"
+    >
       <RegisterComponent onSuccess={() => navigate("/login")} />
-      <p>Already have an account? <Link to="/login">Login</Link></p>
-    </div>
+      <p>
+        Already have an account? <Link to="/login">Login</Link>
+      </p>
+    </AuthLayout>
   );
 }
 
