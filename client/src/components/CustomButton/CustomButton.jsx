@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Spinner } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import "./CustomButton.css";
 
 const CustomButton = ({
@@ -20,20 +20,7 @@ const CustomButton = ({
       onClick={onClick}
       {...props}
     >
-      {isLoading ? (
-        <>
-          <Spinner
-            as="span"
-            animation="border"
-            size="sm"
-            role="status"
-            aria-hidden="true"
-          />
-          <span className="ms-2">Loading...</span>
-        </>
-      ) : (
-        children
-      )}
+      {children}
     </Button>
   );
 };

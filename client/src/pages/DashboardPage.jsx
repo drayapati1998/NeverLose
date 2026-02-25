@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-
+import MainLayout from "../layouts/MainLayout/MainLayout";
 import { useNavigate } from "react-router-dom";
-import Dashboard from "../Components/dashboard/Dashboard";
+import Dashboard from "../components/dashboard/Dashboard";
+
 function DashboardPage() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -13,7 +14,9 @@ function DashboardPage() {
   }
 
   return (
-   <div><Dashboard/></div>
+    <MainLayout>
+      <Dashboard />
+    </MainLayout>
   );
 }
 

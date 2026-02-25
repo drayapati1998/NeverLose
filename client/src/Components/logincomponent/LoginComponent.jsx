@@ -1,55 +1,78 @@
 import React, { useState } from "react";
 import userApi from "../../api/userApi";
 import { login } from "../../services/authService";
-import {Link} from "react-router-dom";//importing link to use in login button
+import { Link } from "react-router-dom";
 import "./LoginComponent.css";
-
+import CustomButton from "../../components/CustomButton/CustomButton";
 
 function LoginComponent({ onSuccess }) {
-const [email, setEmail] = useState(" ");
- const [status, setStatus] = useState("");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("");
+  const [password, setPassword] = useState(" ");
 
-const [password, setPassword] = useState(" ");
-  const handleLogin = async(e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
       alert("All fields are required");
       return;
     }
-     try {
+    try {
       await login({
         email: email,
-        password: password
+        password: password,
       });
 
       onSuccess && onSuccess();
     } catch (err) {
       setStatus(err.response?.data?.error || err.message || "Login failed");
     }
-
-
   };
 
   return (
-    <div className="container">
-      <div className="login-card">
-
-        <h2>Welcome!</h2>
-        <h5>Sign in to manage protected items and check your activity</h5>
-
-        <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} className="d-grid gap-3">
+      <div>
         <label>Email Address</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-          <label>Password</label>
-          <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-          <button type="submit">Login</button>
-          <h6>Forgot your password?</h6>
-          <h6>Don't have an account?<Link to ='/register'>Register Neverlose</Link></h6>
-        </form>
-
+        <input
+          type="email"
+          className="form-control"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
-    </div>
+
+      <div>
+        <label>Password</label>
+        <input
+          type="password"
+          className="form-control"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <div className="text-end mt-1">
+          <small className="text-muted" style={{ cursor: "pointer" }}>
+            Forgot your password?
+          </small>
+        </div>
+      </div>
+
+      <CustomButton type="submit" variant="primary">
+        Login
+      </CustomButton>
+
+      {status && <p className="text-danger small text-center mt-2">{status}</p>}
+
+      <p className="text-center mt-3 small">
+        Don't have an account?{" "}
+        <Link
+          to="/signup"
+          className="text-primary fw-bold text-decoration-none"
+        >
+          Register Neverlose
+        </Link>
+      </p>
+    </form>
   );
 }
 
