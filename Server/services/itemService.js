@@ -82,6 +82,7 @@ function getItemsByOwner(ownerUid) {
           status: row.status,
           createdAt: row.createdAt,
           lastActivityAt: row.lastActivityAt,
+          token:row.token,
           publicScanUrl: `/f/${row.token}`
         }));
 

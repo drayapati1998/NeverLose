@@ -1,69 +1,14 @@
-// services/reportService.js
-// Handles creation and retrieval of found reports.
-
 const db = require("../DB/database");
 
-/**
- * Creates a found report for a specific item.
- */
-function createFoundReport({
-  itemId,
-  finderEmail,
-  finderName,
-  finderPhone,
-  location,
-  message,
-  photoUrl,
-}) {
-  return new Promise((resolve, reject) => {
-    const stmt = db.prepare(
-      `
-      INSERT INTO found_reports
-      (item_id, finder_email, finder_name, finder_phone, location, message, photo_url)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `
-    );
-
-    stmt.run(
-      itemId,
-      finderEmail,
-      finderName || null,
-      finderPhone || null,
-      location || null,
-      message,
-      photoUrl || null,
-      function (err) {
-        if (err) return reject(err);
-
-        resolve({
-          id: this.lastID,
-          item_id: itemId,
-          finder_email: finderEmail,
-          finder_name: finderName,
-          finder_phone: finderPhone,
-          location,
-          message,
-          photo_url: photoUrl,
-        });
-      }
-    );
-  });
-}
-
-/**
- * Returns all found reports for items owned by the given owner.
- */
-function getReportsForOwner(ownerUid) {
+function listReportsForItem(itemId, ownerUid) {
   return new Promise((resolve, reject) => {
     db.all(
-      `
-      SELECT fr.*, i.nickname
-      FROM found_reports fr
-      JOIN items i ON fr.item_id = i.id
-      WHERE i.owner_uid = ?
-      ORDER BY fr.created_at DESC
-    `,
-      [ownerUid],
+      `SELECT r.*
+       FROM reports r
+       JOIN items i ON r.item_id = i.id
+       WHERE r.item_id = ? AND i.owner_uid = ?
+       ORDER BY r.created_at DESC`,
+      [itemId, ownerUid],
       (err, rows) => {
         if (err) return reject(err);
         resolve(rows);
@@ -72,7 +17,40 @@ function getReportsForOwner(ownerUid) {
   });
 }
 
+function getReport(reportId, ownerUid) {
+  return new Promise((resolve, reject) => {
+    db.get(
+      `SELECT r.*, i.owner_uid
+       FROM reports r
+       JOIN items i ON r.item_id = i.id
+       WHERE r.id = ?`,
+      [reportId],
+      (err, row) => {
+        if (err) return reject(err);
+        if (!row) return resolve(null);
+        if (row.owner_uid !== ownerUid) return resolve("FORBIDDEN");
+        resolve(row);
+      }
+    );
+  });
+}
+
+function updateReportStatus(reportId, status) {
+  return new Promise((resolve, reject) => {
+    const updatedAt = new Date().toISOString();
+    db.run(
+      `UPDATE reports SET status = ?, updated_at = ? WHERE id = ?`,
+      [status, updatedAt, reportId],
+      function (err) {
+        if (err) return reject(err);
+        resolve({ ok: true });
+      }
+    );
+  });
+}
+
 module.exports = {
-  createFoundReport,
-  getReportsForOwner,
+  listReportsForItem,
+  getReport,
+  updateReportStatus
 };

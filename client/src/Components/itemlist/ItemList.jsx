@@ -1,45 +1,18 @@
-import React, { useEffect, useState } from "react";
-import itemApi from "../../api/itemApi";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function ItemList(item) {
+export default function ItemList({ item }) {
   const navigate = useNavigate();
+const defaultPresets = [
+  { id: "wallet", name: "Wallet Label" },
+  { id: "airtag", name: "Airtag Label" },
+  { id: "small-tag", name: "Small Tag" }
+];
 
-
-  /*const [items, setItems] = useState(null); // null = not loaded yet
-  const [status, setStatus] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  const loadItems = async () => {
-    setLoading(true);
-    setStatus("");
-
-    try {
-      const data = await itemApi.list();
-      console.log("ITEMS RESPONSE:", data);
-
-      // Normalize response
-      const normalized = Array.isArray(data)
-        ? data
-        : Array.isArray(data?.items)
-        ? data.items
-        : [];
-
-      setItems(normalized);
-    } catch (err) {
-      setStatus(err.response?.data?.error || "Failed to load items");
-      setItems([]); // treat error as empty list
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadItems();
-  }, []);*/
+item.labelPresets = defaultPresets;
 
   return (
-     <div className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition">
+    <div className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition">
       <div className="flex justify-between items-start">
         <h3 className="text-lg font-semibold">{item.nickname}</h3>
 
@@ -72,7 +45,7 @@ function ItemList(item) {
         </p>
       </div>
 
-      <div className="mt-4 flex gap-3">
+      <div className="mt-4 flex flex-col gap-2">
         <button
           onClick={() => navigate(`/label/${item.id}`, { state: item })}
           className="px-3 py-2 bg-blue-600 text-white rounded text-sm"
@@ -80,16 +53,30 @@ function ItemList(item) {
           View Label
         </button>
 
+        {/* Public Scan Page */}
         <button
-          onClick={() => navigate(`/items/${item.id}`)}
+          onClick={() => navigate(`${item.publicScanUrl}`)}
           className="px-3 py-2 bg-gray-200 rounded text-sm"
         >
-          Details
+          Open Public Scan Page
         </button>
+
+        {/* Found Report Page */}
+        <button
+          onClick={() => navigate(`/found/${item.token}`)}
+          className="px-3 py-2 bg-gray-200 rounded text-sm"
+        >
+          Submit Found Report (Test)
+        </button>
+        {/* Owner Reports */}
+        <button
+          onClick={() => navigate(`/reports/${item.id}`)}
+          className="px-3 py-2 bg-purple-600 text-white rounded text-sm"
+        >
+          View Reports
+        </button>
+
       </div>
     </div>
   );
 }
-
-
-export default ItemList;

@@ -1,75 +1,49 @@
-// controllers/reportController.js
-// Handles public found report submission and owner report viewing.
+const {
+  listReportsForItem,
+  getReport,
+  updateReportStatus
+} = require("../services/reportService");
 
-const itemService = require("../services/itemService");
-const reportService = require("../services/reportService");
-const { sendFoundReportEmail } = require("../services/emailService");
+async function getReports(req, res) {
+  const { itemId } = req.params;
+  const ownerUid = req.user.uid;
 
-/**
- * POST /reports/public/:token
- * Public endpoint: finder submits a found report for an item.
- */
-async function submitFoundReport(req, res) {
-  try {
-    const { token } = req.params;
-    const {
-      finder_email,
-      finder_name,
-      finder_phone,
-      location,
-      message,
-      photo_url,
-    } = req.body;
-
-    if (!finder_email || !message) {
-      return res
-        .status(400)
-        .json({ error: "finder_email and message are required" });
-    }
-
-    const item = await itemService.getItemByToken(token);
-    if (!item || !item.is_active) {
-      return res.status(404).json({ error: "Tag not found or inactive" });
-    }
-
-    const report = await reportService.createFoundReport({
-      itemId: item.id,
-      finderEmail: finder_email,
-      finderName: finder_name,
-      finderPhone: finder_phone,
-      location,
-      message,
-      photoUrl: photo_url,
-    });
-
-    // Fire-and-forget email notification
-    sendFoundReportEmail(item, report).catch((err) =>
-      console.error("Email send error:", err)
-    );
-
-    res.status(201).json({ success: true, report });
-  } catch (err) {
-    console.error("Submit report error:", err);
-    res.status(500).json({ error: "Failed to submit report" });
-  }
+  const reports = await listReportsForItem(itemId, ownerUid);
+  return res.json(reports);
 }
 
-/**
- * GET /reports/my
- * Owner endpoint: view all reports for their items.
- */
-async function getMyReports(req, res) {
-  try {
-    const ownerUid = req.user.uid;
-    const reports = await reportService.getReportsForOwner(ownerUid);
-    res.json(reports);
-  } catch (err) {
-    console.error("Get reports error:", err);
-    res.status(500).json({ error: "Failed to fetch reports" });
+async function getReportDetail(req, res) {
+  const { reportId } = req.params;
+  const ownerUid = req.user.uid;
+
+  const report = await getReport(reportId, ownerUid);
+
+  if (report === null) return res.status(404).json({ error: "NOT_FOUND" });
+  if (report === "FORBIDDEN") return res.status(403).json({ error: "FORBIDDEN" });
+
+  return res.json(report);
+}
+
+async function changeStatus(req, res) {
+  const { reportId } = req.params;
+  const { status } = req.body;
+  const ownerUid = req.user.uid;
+
+  const report = await getReport(reportId, ownerUid);
+  if (report === null) return res.status(404).json({ error: "NOT_FOUND" });
+  if (report === "FORBIDDEN") return res.status(403).json({ error: "FORBIDDEN" });
+
+  const valid = ["NEW", "OWNER_CONTACTED", "RESOLVED", "SPAM"];
+  if (!valid.includes(status)) {
+    return res.status(400).json({ error: "INVALID_STATUS" });
   }
+
+  await updateReportStatus(reportId, status);
+  return res.json({ ok: true });
 }
 
 module.exports = {
-  submitFoundReport,
-  getMyReports,
+  getReports,
+  getReportDetail,
+  changeStatus
 };

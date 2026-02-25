@@ -10,8 +10,18 @@ function Dashboard() {
   //const navigate = useNavigate();
 
   useEffect(() => {
-    itemApi.list().then((res) => setItems(res.data));
-  }, []);
+  const fetchItems = async () => {
+    try {
+      const res = await itemApi.list();
+      setItems(res);
+    } catch (err) {
+      console.error("Failed to load items:", err);
+    }
+  };
+
+  fetchItems();
+}, []);
+
 
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();

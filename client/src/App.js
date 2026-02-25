@@ -11,6 +11,10 @@ import CreateItemPage from "./pages/CreateItemPage";
 import QRCodePage from "./pages/QRCodePage";
 import PublicScan from "./pages/PublicScan";
 import SignupPage from "./pages/SignupPage";
+import FoundReport from "./pages/FoundReport";
+import ReportListPage from "./pages/ReportListPage";
+import ReportDetailPage from "./pages/ReportDetailPage";
+
 //import DashboardPage from "./pages/DashboardPage";
 //import FoundReport from "./pages/FoundReport";
 
@@ -29,13 +33,19 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-
+           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/" element={<DashboardPage />} />
           <Route path="/create" element={<CreateItemPage />} />
           <Route path="/label/:itemId" element={<QRCodePage />} />
 
           <Route path="/f/:token" element={<PublicScan />} />
-         
+         <Route path="/found/:token" element={<FoundReport />} />
+         {/* Owner: Reports List for an Item */}
+        <Route path="/reports/:itemId" element={<ReportListPage />} />
+
+        {/* Owner: Report Detail */}
+        <Route path="/reports/detail/:reportId" element={<ReportDetailPage />} />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>

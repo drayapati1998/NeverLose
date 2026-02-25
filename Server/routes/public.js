@@ -1,11 +1,13 @@
-// routes/publicRoutes.js
-// Public routes (no auth required).
-
 const express = require("express");
 const router = express.Router();
-const publicController = require("../controllers/publicController");
 
-// GET /public/scan/:token
-router.get("/scan/:token", publicController.getItemByToken);
+const {
+  getPublicItem,
+  submitFoundReport
+} = require("../controllers/publicController");
+
+// No auth: public endpoints
+router.get("/items/:token", getPublicItem);
+router.post("/items/:token/found", submitFoundReport);
 
 module.exports = router;
