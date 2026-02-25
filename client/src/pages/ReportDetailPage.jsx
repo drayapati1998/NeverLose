@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import ReportDetail from "../Components/reportDetail/ReportDetail";
+import ReportDetail from "../components/reportDetail/ReportDetail";
 function ReportDetailPage() {
  
   return (

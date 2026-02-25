@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import ReportsList from "../Components/reportList/ReportList";
+import ReportsList from "../components/reportList/ReportList";
 function ReportListPage() {
  
   return (

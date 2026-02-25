@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import LabelScreen from "../Components/labelScreen/LabelScreen";
+import LabelScreen from "../components/labelScreen/LabelScreen";
 function QRCodePage() {
  
   return (
