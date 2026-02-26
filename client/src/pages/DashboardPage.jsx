@@ -1,23 +1,34 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useState, useEffect } from "react";
 import MainLayout from "../layouts/MainLayout/MainLayout";
-import { useNavigate } from "react-router-dom";
-import Dashboard from "../components/dashboard/Dashboard";
+import WelcomeState from "../components/welcomeState/WelcomeState";
+// import ItemsListState from './ItemsListState';
+import ItemsList from "../components/itemlist/ItemList";
+import itemApi from "../api/itemApi";
 
-function DashboardPage() {
-  const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+const DashboardPage = () => {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!user) {
-    navigate("/login");
-    return null;
-  }
+  useEffect(() => {
+    itemApi.list().then((res) => {
+      setItems(res.data || []);
+      setLoading(false);
+    });
+  }, []);
+
+  const handleCreate = () => {};
 
   return (
-    <MainLayout>
-      <Dashboard />
+    <MainLayout username="Sarah">
+      {loading ? (
+        <div className="text-white text-center">Loading...</div>
+      ) : items.length === 0 ? (
+        <WelcomeState username="Sarah" onCreateClick={handleCreate} />
+      ) : (
+        <ItemsList items={items} onCreateClick={handleCreate} />
+      )}
     </MainLayout>
   );
-}
+};
 
 export default DashboardPage;

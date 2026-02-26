@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import "./AuthLayout.css";
-import logo from "../../assets/Logo-Neverlose-Main.svg";
+import logo from "../../assets/Neverlose-Main.svg";
 
 const AuthLayout = ({ children, title, subtitle }) => {
   return (

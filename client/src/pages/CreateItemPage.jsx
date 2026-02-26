@@ -4,6 +4,7 @@ import VerificationStep from "../components/item/VerificationStep";
 import ReviewStep from "../components/item/ReviewStep";
 import itemApi from "../api/itemApi";
 import { useNavigate } from "react-router-dom";
+import MainLayout from "../layouts/MainLayout/MainLayout";
 
 export default function CreateItemPage() {
   const [step, setStep] = useState(1);
@@ -22,23 +23,29 @@ export default function CreateItemPage() {
   }
 
   return (
-    <div className="max-w-xl mx-auto">
-      {step === 1 && (
-        <ItemForm form={form} setForm={setForm} next={() => setStep(2)} />
-      )}
+    <MainLayout>
+      <div className="max-w-xl mx-auto">
+        {step === 1 && (
+          <ItemForm form={form} setForm={setForm} next={() => setStep(2)} />
+        )}
 
-      {step === 2 && (
-        <VerificationStep
-          form={form}
-          setForm={setForm}
-          next={() => setStep(3)}
-          back={() => setStep(1)}
-        />
-      )}
+        {step === 2 && (
+          <VerificationStep
+            form={form}
+            setForm={setForm}
+            next={() => setStep(3)}
+            back={() => setStep(1)}
+          />
+        )}
 
-      {step === 3 && (
-        <ReviewStep form={form} back={() => setStep(2)} create={handleCreate} />
-      )}
-    </div>
+        {step === 3 && (
+          <ReviewStep
+            form={form}
+            back={() => setStep(2)}
+            create={handleCreate}
+          />
+        )}
+      </div>
+    </MainLayout>
   );
 }
