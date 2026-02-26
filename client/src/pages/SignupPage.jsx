@@ -11,9 +11,6 @@ function SignupPage() {
       subtitle="Secure your essentials and gain peace of mind"
     >
       <RegisterComponent onSuccess={() => navigate("/login")} />
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
     </AuthLayout>
   );
 }

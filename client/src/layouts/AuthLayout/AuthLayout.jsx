@@ -28,8 +28,10 @@ const AuthLayout = ({ children, title, subtitle }) => {
             </div>
           </Col>
           <Col md={6} className="p-5">
-            <h1>{title}</h1>
-            <p>{subtitle}</p>
+            <header className="auth-header text-center mb-4">
+              {title && <h1>{title}</h1>}
+              {subtitle && <p className="text-muted">{subtitle}</p>}
+            </header>
             {children}
           </Col>
         </Row>
