@@ -1,25 +1,16 @@
 import React from "react";
 import LoginComponent from "../components/logincomponent/LoginComponent";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AuthLayout from "../layouts/AuthLayout/AuthLayout";
 
 function LoginPage() {
   const navigate = useNavigate();
   return (
     <AuthLayout
-      title="Login"
-      subtitle="Welcome back! Please enter your details."
+      title="Welcome!"
+      subtitle="Sign in to manage your protected items and check your activity"
     >
       <LoginComponent onSuccess={() => navigate("/")} />
-      <p className="text-center mt-3">
-        No account?{" "}
-        <Link
-          to="/signup"
-          className="text-primary fw-bold text-decoration-none"
-        >
-          Sign up
-        </Link>
-      </p>
     </AuthLayout>
   );
 }
