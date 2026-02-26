@@ -55,7 +55,7 @@ item.labelPresets = defaultPresets;
 
         {/* Public Scan Page */}
         <button
-          onClick={() => navigate(`${item.publicScanUrl}`)}
+          onClick={() => navigate(`/f/${item.token}`)}
           className="px-3 py-2 bg-gray-200 rounded text-sm"
         >
           Open Public Scan Page
