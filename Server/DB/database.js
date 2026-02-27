@@ -80,6 +80,7 @@ db.serialize(() => {
       subject       TEXT NOT NULL,
       status        TEXT NOT NULL, -- SENT | FAILED
       error_message TEXT,
+      body          TEXT,
       created_at    TEXT NOT NULL,
       FOREIGN KEY (item_id) REFERENCES items(id)
     )

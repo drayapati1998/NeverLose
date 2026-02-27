@@ -53,7 +53,7 @@ async function createItem(req, res) {
       token: item.token,
       status: "ACTIVE",
       createdAt: item.createdAt,
-      publicScanUrl: `/f/${item.token}`,
+      publicScanUrl: `${process.env.HOST_URL}/f/${item.token}`,
       labelPresets
     });
   } catch (err) {

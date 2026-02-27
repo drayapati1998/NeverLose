@@ -1,6 +1,7 @@
 const {
   getPublicItemByToken,
-  createFoundReport
+  createFoundReport,
+  getItemOwner
 } = require("../services/publicService");
 const { sendFoundReportEmail } = require("../services/emailService");
 // GET /api/public/items/:token

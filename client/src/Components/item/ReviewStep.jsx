@@ -1,42 +1,73 @@
 import React from "react";
+import CustomButton from "../CustomButton/CustomButton";
 
-export default function ReviewStep({ form, back, create }) {
+function ReviewStep({form,back,create }) {
   return (
-    <div className="p-6 bg-white shadow rounded">
-      <h2 className="text-xl font-bold mb-4">Review Item</h2>
-
-      <div className="mb-4">
-        <p><strong>Nickname:</strong> {form.nickname}</p>
-        <p><strong>Description:</strong> {form.description || "—"}</p>
-        <p><strong>Photo URL:</strong> {form.photoUrl || "—"}</p>
-
-        <p className="mt-3">
-          <strong>Verification Enabled:</strong>{" "}
-          {form.verification.enabled ? "Yes" : "No"}
-        </p>
-
-        {form.verification.enabled && (
-          <p>
-            <strong>Question:</strong> {form.verification.question}
-          </p>
-        )}
+    <div className="container-fluid bg-light min-vh-100 d-flex align-items-center justify-content-center">
+      <div className="card shadow-lg p-4 rounded-4" style={{ maxWidth: "900px", width: "100%" }}>
+        <h3 className="text-center fw-bold mb-4">Review Your Item</h3>
+        <div className="mb-4">
+          <div className="row align-items-center">
+  <div className="col-md-6 text-center mb-4 mb-md-0">
+    {form.photoUrl ? (
+      <img
+        src={form.photoUrl}
+        alt="Item"
+        className="img-fluid rounded-3 shadow-sm"
+        style={{ maxHeight: "300px" }}/>
+    ) : (
+      <div
+        className="border rounded-3 d-flex align-items-center justify-content-center bg-light"
+        style={{ height: "250px" }}
+      >
+        No Image Available
       </div>
+    )}
+  </div>
+  <div className="col-md-6">
 
-      <div className="flex justify-between mt-6">
-        <button
-          onClick={back}
-          className="px-4 py-2 bg-gray-300 rounded"
-        >
-          Back
-        </button>
+    <div className="mb-3">
+      <strong>Nickname:</strong>
+      <div className="text-muted">{form.nickname || "-"}</div>
+    </div>
+    <div className="mb-3">
+      <strong>Description:</strong>
+      <div className="text-muted">{form.description || "-"}</div>
+    </div>
+    <div className="mb-3">
+      <strong>Photo URL:</strong>
+      <div className="text-muted">{form.photoUrl || "-"}</div>
+    </div>
+    <div className="mb-3">
+      <strong>Verification Enabled:</strong>
+      <div className="text-muted">
+        {form.verification.enabled ? "Yes" : "No"}
+      </div>
+    </div>
+    {form.verification.enabled && (
+      <div className="mb-3">
+        <strong>Security Question:</strong>
+        <div className="text-muted">
+          {form.verification.question}
+        </div>
+      </div>
+    )}
 
-        <button
-          onClick={create}
-          className="px-4 py-2 bg-green-600 text-white rounded"
-        >
+  </div>
+
+</div>              
+    <div className="d-flex justify-content-between mt-4">
+          <CustomButton variant="outline-secondary" onClick={back}>
+            Back
+          </CustomButton>
+          <CustomButton variant="success" onClick={create}>
           Create Item
-        </button>
+          </CustomButton>
+        </div>
       </div>
+    </div>
     </div>
   );
 }
+
+export default ReviewStep;
