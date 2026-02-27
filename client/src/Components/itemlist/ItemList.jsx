@@ -3,13 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function ItemList({ item }) {
   const navigate = useNavigate();
-const defaultPresets = [
-  { id: "wallet", name: "Wallet Label" },
-  { id: "airtag", name: "Airtag Label" },
-  { id: "small-tag", name: "Small Tag" }
-];
 
-item.labelPresets = defaultPresets;
 
   return (
     <div className="border rounded-lg p-4 shadow-sm bg-white hover:shadow-md transition">

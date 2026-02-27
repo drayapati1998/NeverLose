@@ -57,6 +57,12 @@ function createItem(ownerUid, { nickname, description, photoUrl, verification })
  */
 function getItemsByOwner(ownerUid) {
    return new Promise((resolve, reject) => {
+     const labelPresets = [
+      { id: "wallet", name: "Wallet", shape: "rect", widthMm: 85.6, heightMm: 54.0 },
+      { id: "airtag", name: "AirTag", shape: "circle", diameterMm: 32.0 },
+      { id: "small-tag", name: "Small Tag", shape: "rect", widthMm: 30.0, heightMm: 20.0 },
+      { id: "custom", name: "Custom", shape: "custom" }
+    ];
     db.all(
       `SELECT
          id,
@@ -83,7 +89,8 @@ function getItemsByOwner(ownerUid) {
           createdAt: row.createdAt,
           lastActivityAt: row.lastActivityAt,
           token:row.token,
-          publicScanUrl: `/f/${row.token}`
+          publicScanUrl: `${process.env.HOST_URL}/f/${row.token}`,
+          labelPresets:labelPresets
         }));
 
         resolve(items);

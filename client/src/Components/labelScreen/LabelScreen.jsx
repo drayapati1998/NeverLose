@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { labelApi } from "../../api/labelApi";
 
-
 export default function LabelScreen() {
   const { itemId } = useParams();
   const location = useLocation();
@@ -13,36 +12,40 @@ export default function LabelScreen() {
   const [item, setItem] = useState(initialItem);
   const [error, setError] = useState("");
 
+  // Custom size inputs
+  const [customWidth, setCustomWidth] = useState("");
+  const [customHeight, setCustomHeight] = useState("");
+
   // If user refreshes the page, state is lost → fetch minimal item info
   useEffect(() => {
-  const loadItem = async () => {
-    if (!item) {
-      try {
-        const res = await fetch(`/api/items/${itemId}`);
-        const data = await res.json();
+    const loadItem = async () => {
+      if (!item) {
+        try {
+          const res = await fetch(`/api/items/${itemId}`);
+          const data = await res.json();
 
-        // Inject default presets
-        const presets = [
-          { id: "wallet", name: "Wallet Label" },
-          { id: "airtag", name: "Airtag Label" },
-          { id: "small-tag", name: "Small Tag" }
-        ];
+          // Default presets
+          const labelPresets = [
+            { id: "wallet", name: "Wallet", shape: "rect", widthMm: 85.6, heightMm: 54.0 },
+            { id: "airtag", name: "AirTag", shape: "circle", diameterMm: 32.0 },
+            { id: "small-tag", name: "Small Tag", shape: "rect", widthMm: 30.0, heightMm: 20.0 },
+            { id: "custom", name: "Custom" }
+          ];
 
-        setItem({
-          ...data,
-          labelPresets: data.labelPresets || presets
-        });
+          setItem({
+            ...data,
+            labelPresets: data.labelPresets || labelPresets
+          });
 
-      } catch (err) {
-        console.error(err);
-        setError("Unable to load item details.");
+        } catch (err) {
+          console.error(err);
+          setError("Unable to load item details.");
+        }
       }
-    }
-  };
+    };
 
-  loadItem();
-}, [item, itemId]);
-
+    loadItem();
+  }, [item, itemId]);
 
   if (error) {
     return (
@@ -59,7 +62,28 @@ export default function LabelScreen() {
 
   const downloadPreset = async (preset) => {
     try {
-      const res = await labelApi.downloadPdf(itemId, { preset });
+      let payload = { preset }; // DO NOT CHANGE API CALL STRUCTURE
+
+      // Custom requires width + height
+      if (preset === "custom") {
+        if (!customWidth || !customHeight) {
+          alert("Please enter both width and height.");
+          return;
+        }
+
+        const w = Number(customWidth);
+        const h = Number(customHeight);
+
+        if (w <= 0 || w > 100 || h <= 0 || h > 100) {
+          alert("Width and height must be between 1 and 100 mm.");
+          return;
+        }
+
+        payload.widthMm = w;
+        payload.heightMm = h;
+      }
+
+      const res = await labelApi.downloadPdf(itemId, payload);
 
       const blob = new Blob([res.data], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
@@ -94,15 +118,40 @@ export default function LabelScreen() {
 
       <h2 className="text-lg font-semibold mt-6 mb-2">Download Label</h2>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {item.labelPresets?.map((preset) => (
-          <button
-            key={preset.id}
-            onClick={() => downloadPreset(preset.id)}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
-          >
-            {preset.name}
-          </button>
+          <div key={preset.id} className="flex flex-col gap-2">
+            <button
+              onClick={() => downloadPreset(preset.id)}
+              className="px-4 py-2 bg-blue-600 text-white rounded"
+            >
+              {preset.name}
+            </button>
+
+            {preset.id === "custom" && (
+              <div className="flex gap-3 items-center">
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  placeholder="Width (mm)"
+                  className="border rounded px-2 py-1 w-28"
+                  value={customWidth}
+                  onChange={(e) => setCustomWidth(e.target.value)}
+                />
+
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  placeholder="Height (mm)"
+                  className="border rounded px-2 py-1 w-28"
+                  value={customHeight}
+                  onChange={(e) => setCustomHeight(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>
