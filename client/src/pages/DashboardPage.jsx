@@ -5,6 +5,7 @@ import Dashboard from "../components/dashboard/Dashboard";
 import LoadingSpinner from "../components/loadingSpinner/LoadingSpinner";
 
 const DashboardPage = () => {
+  // Destructure everything we need from our custom logic hooks
   const { user, loading: authLoading } = useContext(AuthContext);
 
   if (authLoading) return <LoadingSpinner message="Authenticating..." />;
