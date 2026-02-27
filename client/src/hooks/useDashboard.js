@@ -9,58 +9,29 @@ export const useDashboard = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadItems = async () => {
+    const fetchItems = async () => {
       try {
         setLoading(true);
+        setError(null);
+
         const res = await itemApi.list();
 
-        //Data normalization ensures we always work with an array even if the API structure changes
         const rawData = res.data || [];
         const normalized = Array.isArray(rawData)
           ? rawData
           : rawData.items || [];
 
-        setItems(normalized.length > 0 ? normalized : getMockData());
+        setItems(normalized);
       } catch (err) {
-        setError("Unable to sync with the server. Showing offline demo data.");
-        setItems(getMockData());
+        console.error("Failed to load items:", err);
+        setError("Could not sync with the database.");
       } finally {
         setLoading(false);
       }
     };
-    loadItems();
-  }, []);
 
-  const getMockData = () => [
-    {
-      id: "1",
-      nickname: "MacBook Pro 14",
-      status: "Active",
-      lastActivity: "2 hours ago",
-      description: "Electronics",
-    },
-    {
-      id: "2",
-      nickname: "Blue Travel Backpack",
-      status: "Lost",
-      lastActivity: "Yesterday at 14:30",
-      description: "Travel",
-    },
-    {
-      id: "3",
-      nickname: "Gym Keys",
-      status: "Active",
-      lastActivity: "3 days ago",
-      description: "Personal",
-    },
-    {
-      id: "4",
-      nickname: "Passport Holder",
-      status: "Active",
-      lastActivity: "Oct 12, 2023",
-      description: "Documents",
-    },
-  ];
+    fetchItems();
+  }, []);
 
   const handleCreate = () => navigate("/create-item");
   const handleDetail = (id) => navigate(`/item/${id}`);
