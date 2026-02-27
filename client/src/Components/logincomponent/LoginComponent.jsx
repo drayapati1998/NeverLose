@@ -1,48 +1,12 @@
-import React, { useState } from "react";
-import userApi from "../../api/userApi";
-import { login } from "../../services/authService";
+import React from "react";
 import { Link } from "react-router-dom";
-import "./LoginComponent.css";
 import CustomButton from "../../components/CustomButton/CustomButton";
+import { useLogin } from "../../hooks/useLogin";
+import "./LoginComponent.css";
 
 function LoginComponent({ onSuccess }) {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    const cleanEmail = email.trim();
-    const cleanPassword = password.trim();
-
-    if (!cleanEmail || !cleanPassword) {
-      setStatus("All fields are required");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(cleanEmail)) {
-      setStatus("Please enter a valid email address");
-      return;
-    }
-
-    if (cleanPassword.length < 8) {
-      setStatus("Password must be at least 8 characters long");
-      return;
-    }
-    try {
-      setStatus("");
-      await login({
-        email: cleanEmail,
-        password: cleanPassword,
-      });
-
-      onSuccess && onSuccess();
-    } catch (err) {
-      setStatus(err.response?.data?.error || err.message || "Login failed");
-    }
-  };
+  const { email, setEmail, password, setPassword, status, handleLogin } =
+    useLogin(onSuccess);
 
   return (
     <form onSubmit={handleLogin} className="d-grid gap-3" noValidate>

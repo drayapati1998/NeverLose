@@ -1,22 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import MainLayout from "../layouts/MainLayout/MainLayout";
 import WelcomeState from "../components/welcomeState/WelcomeState";
-// import ItemsListState from './ItemsListState';
-import ItemsList from "../components/itemlist/ItemList";
-import itemApi from "../api/itemApi";
+import ItemsList from "../components/itemsList/ItemsList";
+import { useDashboard } from "../hooks/useDashboard";
 
 const DashboardPage = () => {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    itemApi.list().then((res) => {
-      setItems(res.data || []);
-      setLoading(false);
-    });
-  }, []);
-
-  const handleCreate = () => {};
+  // Destructure everything we need from our custom logic hooks
+  const { items, loading, handleCreate, handleDetail } = useDashboard();
 
   return (
     <MainLayout username="Sarah">
@@ -25,7 +15,11 @@ const DashboardPage = () => {
       ) : items.length === 0 ? (
         <WelcomeState username="Sarah" onCreateClick={handleCreate} />
       ) : (
-        <ItemsList items={items} onCreateClick={handleCreate} />
+        <ItemsList
+          items={items}
+          onCreateClick={handleCreate}
+          onDetailClick={handleDetail}
+        />
       )}
     </MainLayout>
   );
