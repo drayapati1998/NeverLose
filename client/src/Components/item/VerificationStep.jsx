@@ -1,5 +1,5 @@
 import React from "react";
-import VerificationImage from '../../assets/VerificationImage.svg';
+import VerificationImage from "../../assets/VerificationImage.svg";
 import CustomButton from "../CustomButton/CustomButton";
 
 function VerificationStep({ form, setForm, next, back }) {

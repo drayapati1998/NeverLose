@@ -14,7 +14,7 @@ function ItemForm({ form, setForm, next }) {
         <div className="row g-4">
           <div className="col-md-6">
             <label className="form-label fw-semibold">
-              Upload a Photo:
+              Photo URL:
             </label>
             <div 
               className="border border-2 rounded-3 d-flex align-items-center justify-content-center text-muted"
