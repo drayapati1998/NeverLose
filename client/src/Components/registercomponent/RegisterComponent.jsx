@@ -7,14 +7,11 @@ import "./RegisterComponent.css";
 function RegisterComponent({ onSuccess }) {
   //const [form, setForm] = useState({ fullname: "", email: "", password: "" });
   const [status, setStatus] = useState("");
-
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
-  const strongPassword =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
+  const strongPassword =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Button clicked");
@@ -23,9 +20,7 @@ function RegisterComponent({ onSuccess }) {
       return;
     }
     if (!strongPassword.test(password)) {
-      alert(
-        "password must be minimum 8 characters and include uppercase,lowercase,number and special character",
-      );
+      alert("password must be minimum 8 characters and include uppercase,lowercase,number and special character");
       return;
     }
     if (password !== confirmpassword) {
@@ -33,9 +28,7 @@ function RegisterComponent({ onSuccess }) {
       return;
     }
     try {
-      console.log(
-        `email = ${email} fullname = ${fullname} password= ${password}`,
-      );
+      console.log(`email = ${email} fullname = ${fullname} password= ${password}`);
       await signup({
         name: fullname,
         email: email,
@@ -74,7 +67,6 @@ function RegisterComponent({ onSuccess }) {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-
       <div className="form-group text-start">
         <label htmlFor="password">Password</label>
         <input
@@ -86,7 +78,6 @@ function RegisterComponent({ onSuccess }) {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-
       <div className="form-group text-start">
         <label htmlFor="confirm password">Confirm Password</label>
         <input

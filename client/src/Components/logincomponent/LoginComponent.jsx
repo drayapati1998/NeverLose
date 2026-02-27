@@ -28,7 +28,6 @@ function LoginComponent({ onSuccess }) {
       setStatus(err.response?.data?.error || err.message || "Login failed");
     }
   };
-
   return (
     <form onSubmit={handleLogin} className="d-grid gap-3">
       <div>
@@ -40,7 +39,6 @@ function LoginComponent({ onSuccess }) {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-
       <div>
         <label>Password</label>
         <input
