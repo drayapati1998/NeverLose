@@ -1,4 +1,5 @@
 const db = require("../DB/database");
+const {auth} = require("../config/firebaseConfig"); // Firebase Admin SDK
 
 function getPublicItemByToken(token) {
   return new Promise((resolve, reject) => {
@@ -61,7 +62,37 @@ function createFoundReport({ itemId, finder, message, foundLocationText, photoUr
   });
 }
 
+function getItemOwner(itemId) {
+  return new Promise((resolve, reject) => {
+    db.get(
+      `SELECT owner_uid, nickname
+       FROM items
+       WHERE id = ?`,
+      [itemId],
+      async (err, row) => {
+        if (err) return reject(err);
+        if (!row) return resolve(null);
+
+        try {
+          // Fetch Firebase user by UID
+          const userRecord = await auth.getUser(row.owner_uid);
+
+          resolve({
+            ownerUid: row.owner_uid,
+            email: userRecord.email,
+            nickname: row.nickname
+          });
+        } catch (firebaseErr) {
+          reject(firebaseErr);
+        }
+      }
+    );
+  });
+}
+
+
 module.exports = {
   getPublicItemByToken,
-  createFoundReport
+  createFoundReport,
+  getItemOwner
 };

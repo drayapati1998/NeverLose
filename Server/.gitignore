@@ -145,3 +145,4 @@ dist
 
 FirebaseAdmin.json
 neverlose.db
+*.db
