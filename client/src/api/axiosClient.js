@@ -1,11 +1,13 @@
 // src/api/axiosClient.js
 import axios from "axios";
 import { auth } from "../config/firebaseConfig";
+
 const API_BASE_URL = process.env.REACT_APP_API_URL;
 console.log(`API_BASE_URL:${API_BASE_URL}`);
+
 // Axios instance
 const axiosClient = axios.create({
-  baseURL:  API_BASE_URL, // Proxy in package.json will forward to backend
+  baseURL: API_BASE_URL, // Proxy in package.json will forward to backend
   headers: {
     "Content-Type": "application/json",
   },

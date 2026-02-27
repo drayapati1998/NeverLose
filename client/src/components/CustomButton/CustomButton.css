@@ -1,41 +1,45 @@
-.custom-btn {
-    border: none !important;
-    border-radius: 16px !important;
-    padding: 10px 24px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.custom-btn:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
+.btn-blue,
+.btn-red {
+  border: none !important;
+  border-radius: 16px !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 10px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-blue {
   background-color: var(--nl-tech-blue) !important;
-  border: none !important;
-  border-radius: 16px !important;
-  padding: 10px 24px;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  color: white !important;
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
 }
 
 .btn-blue:hover {
   background-color: var(--nl-deep-blue) !important;
-  transform: translateY(-2px);
+  transform: scale(1.02);
   box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
 }
 
 .btn-red {
   background-color: var(--nl-danger) !important;
-  border: none !important;
-  border-radius: 16px !important;
   color: white !important;
-  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
 }
 
 .btn-red:hover {
-  background-color: #c0392b !important;
+  background-color: #d37466 !important;
   transform: scale(1.02);
+  box-shadow: 0 6px 15px rgba(220, 53, 69, 0.3);
+}
+
+/*  RESPONSIVE BREAKPOINT */
+@media (max-width: 575.98px) {
+  .btn-blue,
+  .btn-red {
+    padding: 6px 16px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+  }
 }

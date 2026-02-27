@@ -1,0 +1,56 @@
+.custom-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.custom-table th:nth-child(1) {
+  width: 40%;
+} /* Nickname */
+.custom-table th:nth-child(2) {
+  width: 20%;
+} /* Status */
+.custom-table th:nth-child(3) {
+  width: 20%;
+} /* Activity */
+.custom-table th:nth-child(4) {
+  width: 20%;
+} /* Details */
+
+.custom-table thead th {
+  background-color: rgba(138, 225, 234, 0.5) !important;
+  color: var(--nl-deep-blue);
+}
+
+.custom-table tbody tr:hover td {
+  background-color: rgba(225, 253, 255, 0.2) !important;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bi-arrow-right {
+  -webkit-text-stroke: 1px currentColor;
+}
+
+/* Status Dot styling */
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.active {
+  background-color: var(--nl-success);
+}
+.status-dot.lost {
+  background-color: var(--nl-danger);
+}
+.status-dot.found {
+  background-color: var(--nl-info);
+}
+
+.item-nickname {
+  color: var(--nl-deep-blue) !important;
+  /* text-decoration: underline; */
+  cursor: pointer;
+}
