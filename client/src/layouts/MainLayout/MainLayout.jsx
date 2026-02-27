@@ -4,8 +4,10 @@ import { AuthContext } from "../../context/AuthContext";
 import logoWide from "../../assets/Neverlose-Wide.svg";
 import "./MainLayout.css";
 import userIcon from "../../assets/avatar.svg";
+import { useNavigate } from "react-router-dom";
 
 const MainLayout = ({ children, username = "{UserName}" }) => {
+  const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
   const CustomToggle = React.forwardRef(({ onClick }, ref) => (
     <div
@@ -26,6 +28,8 @@ const MainLayout = ({ children, username = "{UserName}" }) => {
     </div>
   ));
 
+  const handleHome = () => navigate("/dashboard");
+
   return (
     <Container className="mt-4">
       <div className="bg-white rounded-4 shadow-sm p-4">
@@ -38,6 +42,8 @@ const MainLayout = ({ children, username = "{UserName}" }) => {
                 // width="30"
                 height="40"
                 className="me-2"
+                onClick={handleHome}
+                style={{ cursor: "pointer" }}
               />
             </div>
           </Col>
