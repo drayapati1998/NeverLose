@@ -1,46 +1,33 @@
-// src/controllers/labelController.js
+// controllers/labelsController.js
+// Generates printable QR label PDFs for items owned by the authenticated user.
+// The controller delegates all logic to LabelService.
 
-const { getItemForLabel, generateLabel } = require("../services/labelService");
+const { LabelService } = require("../services/labelService");
 
-async function downloadLabelPdf(req, res) {
+exports.getLabel = async (req, res) => {
   try {
+    const ownerId = req.user.uid;
     const { itemId } = req.params;
-    const ownerUid = req.user.uid;
-    const { preset, widthMm, heightMm, diameterMm } = req.query;
 
-    // 1. Fetch item + ownership check
-    const item = await getItemForLabel(itemId, ownerUid);
+    // Default preset is "wallet" unless specified
+    const preset = req.query.preset || "wallet";
 
-    if (item === null) {
-      return res.status(404).json({ error: "ITEM_NOT_FOUND" });
-    }
+    // Optional custom dimensions
+    const widthMm = req.query.widthMm ? Number(req.query.widthMm) : undefined;
+    const heightMm = req.query.heightMm ? Number(req.query.heightMm) : undefined;
+    const diameterMm = req.query.diameterMm ? Number(req.query.diameterMm) : undefined;
 
-    if (item === "FORBIDDEN") {
-      return res.status(403).json({ error: "FORBIDDEN" });
-    }
-
-    // 2. Generate PDF
-    const pdfBuffer = await generateLabel(item, {
+    // Streams PDF directly to response
+    await LabelService.generateLabelPdfForItem({
+      ownerId,
+      itemId,
       preset,
       widthMm,
       heightMm,
-      diameterMm
+      diameterMm,
+      res,
     });
-
-    // 3. Send PDF
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="label-${itemId}.pdf"`
-    );
-
-    return res.send(pdfBuffer);
   } catch (err) {
-    console.error("Label PDF error:", err);
-    return res.status(500).json({ error: "PDF_GENERATION_FAILED" });
+    res.status(400).json({ error: err.message });
   }
-}
-
-module.exports = {
-  downloadLabelPdf
 };

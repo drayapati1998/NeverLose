@@ -1,36 +1,45 @@
-// src/services/labelService.js
+// services/labelService.js
+// Generates printable QR label PDFs for items. This service handles:
+// - Ownership validation
+// - QR code generation
+// - PDF streaming with correct physical dimensions
 
-const db = require("../DB/database");
-const { generateLabelPdf } = require("../utils/pdfGenerator");
+const { ItemService } = require("./itemService");
+const { generateQrDataUrl } = require("../utils/qr");
+const { streamLabelPdf } = require("../utils/pdfGenerator");
 
-async function getItemForLabel(itemId, ownerUid) {
-  return new Promise((resolve, reject) => {
-    db.get(
-      `SELECT id, token, owner_uid FROM items WHERE id = ?`,
-      [itemId],
-      (err, item) => {
-        if (err) return reject(err);
-        if (!item) return resolve(null);
-        if (item.owner_uid !== ownerUid) return resolve("FORBIDDEN");
-        resolve(item);
-      }
-    );
-  });
-}
+// Base URL for public "found it" pages.
+const PUBLIC_BASE_URL = process.env.HOST_URL || "http://localhost:3000";
 
-async function generateLabel(item, params) {
-  const { preset, widthMm, heightMm, diameterMm } = params;
-
-  return await generateLabelPdf({
-    token: item.token,
+exports.LabelService = {
+  // Generates and streams a PDF label for a specific item.
+  async generateLabelPdfForItem({
+    ownerId,
+    itemId,
     preset,
-    widthMm: widthMm ? Number(widthMm) : undefined,
-    heightMm: heightMm ? Number(heightMm) : undefined,
-    diameterMm: diameterMm ? Number(diameterMm) : undefined
-  });
-}
+    widthMm,
+    heightMm,
+    diameterMm,
+    res,
+  }) {
+    // Ensure item exists and belongs to the authenticated owner.
+    const item = await ItemService.getItemByIdForOwner(itemId, ownerId);
+    if (!item) {
+      throw new Error("Item not found or access denied");
+    }
 
-module.exports = {
-  getItemForLabel,
-  generateLabel
+    // Public scan URL encoded in the QR code.
+    const scanUrl = `${PUBLIC_BASE_URL}/f/${item.token}`;
+
+    // Generate QR code as a data URL.
+    const qrDataUrl = await generateQrDataUrl(scanUrl);
+
+    // Stream PDF directly to the HTTP response.
+    await streamLabelPdf(res, {
+      preset,
+      custom: { widthMm, heightMm, diameterMm },
+      qrDataUrl,
+      scanUrl,
+    });
+  },
 };

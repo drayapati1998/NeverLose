@@ -1,123 +1,65 @@
 // services/itemService.js
-// Encapsulates all DB operations related to items.
+// Handles all Firestore operations related to items, including creation,
+// listing, and token assignment. This layer contains business logic and
+// validation, keeping controllers thin and focused on HTTP concerns.
 
-const db = require("../DB/database");
-const { generateSecureToken } = require("./tokenService");
+const { db } = require("../config/firebaseConfig");
+const { TokenService } = require("./tokenService");
 
-/**
- * Creates a new item for the given owner with a unique QR token.
- */
-function createItem(ownerUid, { nickname, description, photoUrl, verification }) {
-  return new Promise((resolve, reject) => {
-    const verificationEnabled = !!verification?.enabled;
-    const verificationQuestion = verificationEnabled ? verification.question.trim() : null;
+const COLLECTION = "items";
 
-    const token = generateSecureToken();
+exports.ItemService = {
+  async createItem(ownerId, payload) {
+    if (!payload.nickname || !payload.nickname.trim()) {
+      throw new Error("Nickname is required");
+    }
+
+    if (
+      payload.verification?.enabled &&
+      !payload.verification.question?.trim()
+    ) {
+      throw new Error("Verification question is required when enabled");
+    }
+
+    const token = TokenService.generateToken(128);
     const createdAt = new Date().toISOString();
 
-    db.run(
-      `INSERT INTO items (
-        owner_uid,
-        nickname,
-        description,
-        photo_url,
-        verification_enabled,
-        verification_question,
-        token,
-        status,
-        created_at,
-        last_activity_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', ?, NULL)`,
-      [
-        ownerUid,
-        nickname.trim(),
-        description?.trim() || null,
-        photoUrl || null,
-        verificationEnabled ? 1 : 0,
-        verificationQuestion,
-        token,
-        createdAt
-      ],
-      function (err) {
-        if (err) return reject(err);
+    const docRef = db.collection(COLLECTION).doc();
 
-        resolve({
-          id: this.lastID,
-          token,
-          createdAt
-        });
-      }
-    );
-  });
-}
+    const item = {
+      id: docRef.id,
+      ownerId,
+      nickname: payload.nickname.trim(),
+      description: payload.description || "",
+      photoUrl: payload.photoUrl || "", // now passed from upload API
+      verification: payload.verification || { enabled: false },
+      token,
+      status: "ACTIVE",
+      createdAt,
+      lastActivityAt: null,
+    };
 
+    await docRef.set(item);
+    return item;
+  },
 
-/**
- * Returns all items belonging to a specific owner.
- */
-function getItemsByOwner(ownerUid) {
-   return new Promise((resolve, reject) => {
-     const labelPresets = [
-      { id: "wallet", name: "Wallet", shape: "rect", widthMm: 85.6, heightMm: 54.0 },
-      { id: "airtag", name: "AirTag", shape: "circle", diameterMm: 32.0 },
-      { id: "small-tag", name: "Small Tag", shape: "rect", widthMm: 30.0, heightMm: 20.0 },
-      { id: "custom", name: "Custom", shape: "custom" }
-    ];
-    db.all(
-      `SELECT
-         id,
-         nickname,
-         description,
-         photo_url AS photoUrl,
-         status,
-         created_at AS createdAt,
-         last_activity_at AS lastActivityAt,
-         token
-       FROM items
-       WHERE owner_uid = ?
-       ORDER BY created_at DESC`,
-      [ownerUid],
-      (err, rows) => {
-        if (err) return reject(err);
+  async listItems(ownerId) {
+    const snap = await db
+      .collection(COLLECTION)
+      .where("ownerId", "==", ownerId)
+      .orderBy("createdAt", "desc")
+      .get();
 
-        const items = rows.map(row => ({
-          id: row.id,
-          nickname: row.nickname,
-          description: row.description,
-          photoUrl: row.photoUrl,
-          status: row.status,
-          createdAt: row.createdAt,
-          lastActivityAt: row.lastActivityAt,
-          token:row.token,
-          publicScanUrl: `${process.env.HOST_URL}/f/${row.token}`,
-          labelPresets:labelPresets
-        }));
+    return snap.docs.map((doc) => doc.data());
+  },
 
-        resolve(items);
-      }
-    );
-  });
-}
+  async getItemByIdForOwner(itemId, ownerId) {
+    const doc = await db.collection(COLLECTION).doc(itemId).get();
+    if (!doc.exists) return null;
 
+    const item = doc.data();
+    if (item.ownerId !== ownerId) return null;
 
-/**
- * Looks up an item by its QR token (used by public scan).
- */
-function getItemByToken(qrToken) {
-  return new Promise((resolve, reject) => {
-    db.get(
-      "SELECT * FROM items WHERE qr_token = ?",
-      [qrToken],
-      (err, row) => {
-        if (err) return reject(err);
-        resolve(row || null);
-      }
-    );
-  });
-}
-
-module.exports = {  
-  createItem,
-  getItemsByOwner,
-  getItemByToken,
+    return item;
+  },
 };

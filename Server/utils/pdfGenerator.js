@@ -1,69 +1,54 @@
-// Generates a small PDF containing a QR code for the item's public URL.
-// Supports different size presets (wallet, airtag, smalltag, custom).
+// src/lib/pdf.js
+const PDFDocument =require('pdfkit');
 
-const PDFDocument = require("pdfkit");
-const QRCode = require("qrcode");
+const MM_TO_PT = 72 / 25.4;
+const mmToPt = mm => mm * MM_TO_PT;
 
-const MM_TO_PT = 2.83465; // millimeters to points conversion
-
-async function generateLabelPdf({ preset, token, widthMm, heightMm, diameterMm }) {
-  // Public scan URL that the QR code should point to.
-  const url = `${process.env.HOST_URL}/f/${token}`;
-
-  // Generate QR code as a data URL (PNG).
-  const qrDataUrl = await QRCode.toDataURL(url, { margin: 1 });
-  const qrBuffer = Buffer.from(qrDataUrl.split(",")[1], "base64");
-
-  // Default sizes based on preset.
-  if (preset === "wallet") {
-    widthMm = 85.6;
-    heightMm = 54;
-  } else if (preset === "airtag") {
-    widthMm = heightMm = 32;
-  } else if (preset === "small-tag") {
-    widthMm = 50;
-    heightMm = 20;
-  } else if (preset === "custom" && diameterMm) {
-    widthMm = heightMm = diameterMm;
+exports.getPresetSize = (preset, custom) =>{
+  switch (preset) {
+    case 'wallet':
+      return { width: mmToPt(85.6), height: mmToPt(54) };
+    case 'airtag':
+      return { width: mmToPt(32), height: mmToPt(32), circle: true };
+    case 'smalltag':
+      return { width: mmToPt(40), height: mmToPt(20) };
+    case 'custom':
+      if (custom?.diameterMm) {
+        const d = mmToPt(custom.diameterMm);
+        return { width: d, height: d, circle: true };
+      }
+      return {
+        width: mmToPt(custom.widthMm),
+        height: mmToPt(custom.heightMm),
+      };
+    default:
+      throw new Error('Invalid preset');
   }
-  const widthPt = widthMm * MM_TO_PT;
-  const heightPt = heightMm * MM_TO_PT;
-
-  // Create a PDF document sized to the label.
-  const doc = new PDFDocument({
-    size: [widthPt, heightPt],
-    margin: 5
-  });
-
-  const chunks = [];
-  doc.on("data", chunk => chunks.push(chunk));
-
-  const done = new Promise(resolve => {
-    doc.on("end", () => resolve(Buffer.concat(chunks)));
-  });
- // Draw circle outline for AirTag
-  if (preset === "airtag") {
-    const radius = (widthPt - 10) / 2;
-    const centerX = widthPt / 2;
-    const centerY = heightPt / 2;
-
-    doc.circle(centerX, centerY, radius).stroke("#000");
-  }
-
-
-  // Draw QR code centered on the label.
-  doc.image(qrBuffer, {
-    fit: [widthMm * MM_TO_PT - 10, heightMm * MM_TO_PT - 20],
-    align: "center",
-    valign: "center"
-  });
-
-  // Optional: print the URL under the QR code.
-  doc.moveDown();
-  doc.fontSize(8).text(url, { align: "center" });
-
-  doc.end();
-  return done;
 }
 
-module.exports = { generateLabelPdf };
+exports.streamLabelPdf = async(res, opts)=> {
+  const size = getPresetSize(opts.preset, opts.custom);
+  const doc = new PDFDocument({
+    size: [size.width, size.height],
+    margin: 0,
+  });
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename="label.pdf"');
+
+  doc.pipe(res);
+
+  const qrSize = Math.min(size.width * 0.8, size.height * 0.8);
+
+  doc.image(opts.qrDataUrl, (size.width - qrSize) / 2, (size.height - qrSize) / 2 - 5, {
+    width: qrSize,
+    height: qrSize,
+  });
+
+  doc.fontSize(8).text(opts.scanUrl, 5, size.height - 12, {
+    width: size.width - 10,
+    align: 'center',
+  });
+
+  doc.end();
+}
