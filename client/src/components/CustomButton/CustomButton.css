@@ -7,6 +7,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-red {
@@ -18,6 +20,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-outline-blue {
@@ -31,6 +35,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-blue {
@@ -67,18 +73,12 @@
 /*  RESPONSIVE BREAKPOINT */
 @media (max-width: 575.98px) {
   .btn-blue,
-  .btn-red {
-    padding: 6px 16px !important;
-    font-size: 0.85rem !important;
-    border-radius: 12px !important;
-  }
-}
-
-@media (max-width: 575.98px) {
+  .btn-red,
   .btn-outline-blue {
     padding: 6px 16px !important;
     font-size: 0.85rem !important;
     border-radius: 12px !important;
     border-width: 1px !important;
+    white-space: nowrap;
   }
 }

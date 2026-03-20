@@ -60,22 +60,6 @@ p {
   color: #4a5568;
 }
 
-/* 5. BOOTSTRAP OVERRIDES */
-.btn-primary {
-  background-color: var(--nl-tech-blue) !important;
-  border-color: var(--nl-tech-blue) !important;
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 10px 24px;
-  transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--nl-deep-blue) !important;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
 .card {
   background: rgba(255, 255, 255, 0.8) !important;
   backdrop-filter: blur(10px);

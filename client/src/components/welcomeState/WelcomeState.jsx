@@ -14,8 +14,13 @@ const WelcomeState = ({ onCreateClick }) => {
     <div>
       <div className="d-flex align-items-center justify-content-center py-5 px-4 bg-white rounded-4 shadow-sm w-100">
         <div className=" text-center w-100" style={{ maxWidth: "900px" }}>
-          <h1 className="fw-bold text-nl-dark mb-2">Welcome {displayName}</h1>
-          <h2 className="fw-light text-nl-dark mb-5">
+          <h1
+            className="fw-bold text-nl-dark mb-2 "
+            style={{ letterSpacing: "1px" }}
+          >
+            Welcome <span className="text-brand-gradient">{displayName}</span>
+          </h1>
+          <h2 className="fw-light text-nl-dark mb-5 text-muted">
             Let’s secure your world!
           </h2>
 
