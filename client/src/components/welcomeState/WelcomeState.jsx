@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import CustomButton from "../CustomButton/CustomButton";
-import { Container } from "react-bootstrap";
+import { Container, Navbar } from "react-bootstrap";
 import { AuthContext } from "../../context/AuthContext";
 import step1 from "../../assets/Step 1.png";
 import step2 from "../../assets/Step 2.png";
