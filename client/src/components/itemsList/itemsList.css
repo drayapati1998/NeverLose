@@ -1,0 +1,70 @@
+.custom-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.custom-table th:nth-child(1) {
+  width: 50%;
+} /* Nickname */
+.custom-table th:nth-child(2) {
+  width: 25%;
+} /* Status */
+.custom-table th:nth-child(3) {
+  width: 25%;
+} /* Details */
+
+.custom-table thead th {
+  background-color: rgba(138, 225, 234, 0.5) !important;
+  color: var(--nl-deep-blue);
+}
+
+/* arrow styles */
+.btn-link i.bi-arrow-right {
+  display: inline-block;
+  transition:
+    transform 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+  cursor: pointer;
+  -webkit-text-stroke: 1.5px currentColor;
+  color: var(--nl-tech-blue) !important;
+}
+
+/* Not dissable hover */
+.btn-link:not(:disabled):hover i.bi-arrow-right {
+  transform: scale(1.15);
+}
+
+/* dissable arrow */
+.btn-link:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Status Dots */
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.active {
+  background-color: var(--nl-success);
+}
+.status-dot.lost {
+  background-color: var(--nl-danger);
+}
+.status-dot.found {
+  background-color: var(--nl-info);
+}
+
+.item-nickname {
+  color: var(--nl-deep-blue);
+}
+
+.item-nickname:hover {
+  color: var(--nl-tech-blue);
+  text-decoration: underline;
+  cursor: pointer;
+}

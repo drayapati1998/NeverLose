@@ -1,0 +1,18 @@
+.review-image-wrapper {
+  max-width: 300px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.wizard-image-box {
+  width: 100%;
+  height: auto;
+  background-color: #fff;
+}
+
+.wizard-image-box img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}

@@ -1,0 +1,47 @@
+.EditDelete-container {
+  background-color: #f8f9fa;
+  border-radius: 30px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border: 1px solid #e9ecef;
+  width: fit-content;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+  line-height: 1;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+.btn-edit {
+  color: #6c757d;
+}
+
+.btn-edit:hover {
+  color: #006aff;
+}
+
+.btn-delete {
+  color: #adb5bd;
+}
+
+.btn-delete:hover {
+  color: #dc3545;
+}

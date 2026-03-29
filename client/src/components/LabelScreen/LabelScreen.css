@@ -1,0 +1,38 @@
+.nl-preset-card {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 20px !important;
+  transition: all 0.3s;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.nl-preset-card:hover {
+  transform: translateY(-3px);
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: #0c6dff !important;
+  box-shadow: 0 10px 30px rgba(12, 109, 255, 0.3) !important;
+}
+
+.nl-preset-card:active {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(12, 109, 255, 0.2) !important;
+}
+
+.nl-preset-card .preset-name {
+  color: white;
+  font-weight: 700;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.nl-preset-card .preset-desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+}
