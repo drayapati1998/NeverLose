@@ -12,7 +12,7 @@ describe('NeverLose - Edit Item Flow', () => {
   it('should successfully update the description of an existing item', () => {
 
     // Click item name to go to details
-    cy.contains('ffgc').click();
+    cy.contains('Home Keys').click();
 
     // Click Edit button (pencil icon)
     cy.get('.btn.btn-edit.btn-link').first().click();

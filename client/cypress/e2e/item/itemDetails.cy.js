@@ -14,7 +14,7 @@ describe('NeverLose - Item Details + Label Screen Flow', () => {
 
   it('should open item details and verify label screen', () => {
     //Open Item Details
-    cy.contains('Blue color Testing edit item')
+    cy.contains('Home Keys')
       .should('exist')
       .click();
 
@@ -23,11 +23,11 @@ describe('NeverLose - Item Details + Label Screen Flow', () => {
     //  Verify Item Details
     cy.contains('Item Details').should('be.visible');
 
-    cy.contains('Blue color Testing edit item').should('be.visible');
+    cy.contains('Home Keys').should('be.visible');
 
     cy.get('img').should('exist');
 
-    cy.contains('Testing edit item').should('exist');
+    cy.contains('Home Keys').should('exist');
 
     cy.contains(/security question/i).should('exist');
     // Scroll to Label Section
